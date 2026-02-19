@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skripsi | Analisis Efek Hover pada UX - ERUTD M THALIF</title>
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* ===== RESET & VARIABLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0A192F;
+            --primary-light: #112240;
+            --primary-dark: #020C1B;
+            --secondary: #FFD700;
+            --secondary-dark: #4ECDC4;
+            --accent: #FCA311;
+            --text-primary: #E6F1FF;
+            --text-secondary: #8892B0;
+            --white: #FFFFFF;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+            --border-radius-xl: 30px;
+            --border-radius-full: 50%;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 6px;
+            border: 3px solid var(--primary-light);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-dark);
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 5%;
+            background: rgba(10, 25, 47, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .navbar.scrolled {
+            padding: 0.8rem 5%;
+            background: rgba(10, 25, 47, 0.98);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(100, 255, 218, 0.1);
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== SECTIONS WITH DIFFERENT BACKGROUNDS ===== */
+        .section {
+            min-height: 100vh;
+            padding: 100px 5% 50px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.85);
+            z-index: 1;
+        }
+
+        /* Background Images for Each Slide */
+        #home {
+            background-image: url('IMG_20260217_094453_578.png');
+        }
+        
+        #identitas {
+            background-image: url('IMG_20260217_094427_466.png');
+        }
+        
+        #pengesahan {
+            background-image: url('IMG_20260217_094503_540.png');
+        }
+        
+        #rumusan {
+            background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        }
+        
+        #bab1 {
+            background-image: url('IMG_20260217_094439_259.png');
+        }
+        
+        #bab2 {
+            background-image: url('IMG_20260217_094533_662.png');
+        }
+        
+        #bab3 {
+            background-image: url('IMG_20260217_094523_946.png');
+        }
+        
+        #bab4 {
+            background-image: url('IMG_20260217_094427_466.png');
+        }
+        
+        #bab5 {
+            background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        }
+        
+        #pustaka {
+            background-image: url('IMG_20260217_094512_768.png');
+        }
+        
+        #kontak {
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* ===== SCROLL TOP BUTTON ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background: var(--secondary-dark);
+            transform: scale(1.1) rotate(360deg);
+            border-color: var(--white);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            color: var(--white);
+        }
+
+        .hero-logo {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            position: relative;
+            animation: floatAndSpin 8s ease-in-out infinite;
+        }
+
+        .hero-logo::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            opacity: 0.5;
+        }
+
+        .hero-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(100, 255, 218, 0.3));
+        }
+
+        @keyframes floatAndSpin {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(15px) rotate(-5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        .hero-content h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-content h1 span {
+            color: var(--secondary);
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 400;
+            margin-top: 0.5rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            display: inline-block;
+            color: var(--white);
+            font-family: 'Playfair Display', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .section-title-center {
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            display: block;
+            color: var(--white);
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .section-title-center::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-decoration: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: var(--primary);
+            border: 2px solid var(--secondary);
+        }
+
+        .btn-primary::before {
+            background: var(--white);
+        }
+
+        .btn-primary:hover {
+            color: var(--secondary);
+            border-color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(100, 255, 218, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--secondary);
+        }
+
+        .btn-outline::before {
+            background: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(100, 255, 218, 0.4);
+        }
+
+        /* ===== PROFILE CARD ===== */
+        .profile-card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 3rem;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            padding: 3rem;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .profile-image {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--secondary);
+            box-shadow: 0 0 40px rgba(100, 255, 218, 0.3);
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info h2 {
+            font-size: 2.5rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info .nim {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info .univ {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .info-item i {
+            font-size: 1.3rem;
+            color: var(--secondary);
+        }
+
+        .info-item strong {
+            display: block;
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+
+        .info-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* ===== SIGNATURE GRID ===== */
+        .signature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .signature-item {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .signature-photo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--secondary);
+        }
+
+        .signature-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .signature-item .role {
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .signature-item .name {
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .signature-item .nip {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ===== RUMUSAN GRID ===== */
+        .rumusan-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .rumusan-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rumusan-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--secondary), var(--accent));
+        }
+
+        .rumusan-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .rumusan-icon i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .rumusan-item h3 {
+            color: var(--secondary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .rumusan-item p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .rumusan-item .definition {
+            font-size: 0.95rem;
+            padding: 1rem;
+            background: rgba(100, 255, 218, 0.05);
+            border-radius: var(--border-radius-sm);
+            margin-top: 1rem;
+            border-left: 3px solid var(--accent);
+            color: var(--text-secondary);
+        }
+
+        /* ===== BAB CARDS ===== */
+        .bab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .bab-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .bab-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .bab-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .bab-icon i {
+            font-size: 2rem;
+            color: var(--secondary);
+        }
+
+        .bab-card h3 {
+            color: var(--white);
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .bab-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .bab-card .detail-text {
+            font-size: 0.9rem;
+            padding: 1rem;
+            background: rgba(100, 255, 218, 0.05);
+            border-radius: var(--border-radius-sm);
+            border-left: 3px solid var(--accent);
+            color: var(--text-secondary);
+        }
+
+        /* ===== PUSTAKA GRID ===== */
+        .pustaka-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .pustaka-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            display: flex;
+            gap: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .pustaka-item:hover {
+            transform: translateX(10px);
+            border-color: var(--secondary);
+        }
+
+        .pustaka-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pustaka-icon i {
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .pustaka-content h4 {
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .pustaka-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ===== THANKS SECTION ===== */
+        .thanks-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            margin: 3rem 0;
+        }
+
+        .thanks-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 0 30px rgba(100, 255, 218, 0.3);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
+            50% { text-shadow: 0 0 40px rgba(100, 255, 218, 0.6); }
+        }
+
+        .thanks-subtitle {
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 2rem;
+        }
+
+        .thanks-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 2rem auto;
+        }
+
+        .thanks-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.5rem;
+            background: rgba(100, 255, 218, 0.05);
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .thanks-item i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .thanks-item h4 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .thanks-item p {
+            color: var(--text-secondary);
+        }
+
+        /* ===== MAPS SECTION ===== */
+        .maps-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            margin: 3rem 0;
+        }
+
+        .maps-title {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .maps-container {
+            width: 100%;
+            height: 400px;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            border: 2px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .maps-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .maps-address {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(100, 255, 218, 0.05);
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .maps-address i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .maps-address p {
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .maps-address a {
+            color: var(--secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--secondary);
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+        }
+
+        .maps-address a:hover {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        /* ===== SOCIAL MEDIA BUTTONS ===== */
+        .social-section {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .social-title {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(100, 255, 218, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-size: 1.8rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--secondary);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+            z-index: -1;
+        }
+
+        .social-btn:hover {
+            color: var(--primary);
+            border-color: var(--secondary);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .social-btn:hover::before {
+            width: 80px;
+            height: 80px;
+        }
+
+        .social-btn:hover i {
+            animation: spin 0.6s;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--primary-dark);
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-content h3 {
+            font-size: 1.8rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-content p {
+            color: var(--text-secondary);
+            margin: 0.3rem 0;
+        }
+
+        .footer-divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .profile-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .profile-image {
+                margin: 0 auto;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .signature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content h1 span {
+                font-size: 1.2rem;
+            }
+            
+            .rumusan-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pustaka-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .signature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .thanks-title {
+                font-size: 2.5rem;
+            }
+            
+            .thanks-list {
+                flex-direction: column;
+            }
+            
+            .maps-container {
+                height: 300px;
+            }
+            
+            .social-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i> Skripsi
+        </div>
+        <div class="nav-links">
+            <a href="#home">Beranda</a>
+            <a href="#identitas">Identitas</a>
+            <a href="#pengesahan">Pengesahan</a>
+            <a href="#rumusan">Rumusan</a>
+            <a href="#bab1">BAB I</a>
+            <a href="#bab2">BAB II</a>
+            <a href="#bab3">BAB III</a>
+            <a href="#bab4">BAB IV</a>
+            <a href="#bab5">BAB V</a>
+            <a href="#pustaka">Pustaka</a>
+            <a href="#kontak">Kontak</a>
+        </div>
+    </nav>
+
+    <!-- Scroll to Top -->
+    <div class="scroll-top" id="scrollTop" onclick="smoothScroll('home')">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- SLIDE 1: HOME -->
+    <section id="home" class="section">
+        <div class="container">
+            <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
+                <div class="hero-logo" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="tblCLZnx_o.png" alt="Logo Universitas Indonesia">
+                </div>
+                <h1 data-aos="fade-up" data-aos-delay="400">
+                    ANALISIS PENGARUH VARIASI EFEK HOVER
+                    <span>TERHADAP USER EXPERIENCE (UX) PADA WEBSITE PORTOFOLIO</span>
+                </h1>
+                <p data-aos="fade-up" data-aos-delay="600">Skripsi Program Studi Teknik Informatika - Universitas Putra Indonesia</p>
+                <div class="btn-group" data-aos="fade-up" data-aos-delay="800">
+                    <button class="btn btn-primary" onclick="smoothScroll('identitas')">
+                        <i class="fas fa-user"></i> Identitas
+                    </button>
+                    <button class="btn btn-outline" onclick="smoothScroll('rumusan')">
+                        <i class="fas fa-question-circle"></i> Rumusan Masalah
+                    </button>
+                    <button class="btn btn-outline" onclick="smoothScroll('kontak')">
+                        <i class="fas fa-map-marker-alt"></i> Lokasi Kampus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: IDENTITAS -->
+    <section id="identitas" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">IDENTITAS MAHASISWA</h2>
+            
+            <div class="profile-card" data-aos="fade-up" data-aos-duration="1000">
+                <div class="profile-image" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="IMG_20260217_023216_877.jpg" alt="ERUTD M THALIF">
+                </div>
+                <div class="profile-info" data-aos="fade-left" data-aos-delay="400">
+                    <h2>ERUTD M THALIF</h2>
+                    <div class="nim">BP 2202252630241</div>
+                    <div class="univ">Universitas Putra Indonesia - Fakultas Ilmu Komputer</div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <strong>Program Studi</strong>
+                                <p>Teknik Informatika</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <strong>Tahun Akademik</strong>
+                                <p>2022/2023</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <p>erutd.thalif@ui.ac.id</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <strong>Telepon</strong>
+                                <p>0812-3456-7890</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Alamat</strong>
+                                <p>Padang, Sumatera Barat</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-globe"></i>
+                            <div>
+                                <strong>Website</strong>
+                                <p>erutd.student.ui.ac.id</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: PENGESAHAN -->
+    <section id="pengesahan" class="section">
+        <div class="container">
+            <h2 class="section-title-center" data-aos="fade-down">HALAMAN PENGESAHAN</h2>
+            
+            <div class="signature-grid">
+                <div class="signature-item" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="signature-photo">
+                        <img src="IMG_20260128_092839_658.jpg" alt="Mahasiswa">
+                    </div>
+                    <div class="role">Mahasiswa</div>
+                    <div class="name">ERUTD M THALIF</div>
+                    <div class="nip">BP 2202252630241</div>
+                    <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">Program Studi Teknik Informatika</div>
+                </div>
+                
+                <div class="signature-item" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="signature-photo">
+                        <img src="images.jpeg" alt="Dr. Budi">
+                    </div>
+                    <div class="role">Pembimbing I</div>
+                    <div class="name">Dr. Eka Praja, M.Kom</div>
+                    <div class="nip">NIP. 197812342005011001</div>
+                    <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">Departemen Ilmu Komputer</div>
+                </div>
+                
+                <div class="signature-item" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="signature-photo">
+                        <img src="rini-1.jpg" alt="Dr. Siti">
+                    </div>
+                    <div class="role">Pembimbing II</div>
+                    <div class="name">Dr. Rini, M.T</div>
+                    <div class="nip">NIP. 198012152006042002</div>
+                    <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">Departemen Ilmu Komputer</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.05); border-radius: var(--border-radius-md);">
+                <p style="color: var(--text-secondary);">Ditetapkan di: Padang</p>
+                <p style="color: var(--text-secondary);">Tanggal: 15 Februari 2026</p>
+                <p style="color: var(--text-secondary); margin-top: 1rem;">Dekan Fakultas Ilmu Komputer</p>
+                <p style="color: var(--white); font-weight: 600;">Prof. Dr. Ir. Maya Sari, M.Sc., Ph.D</p>
+                <p style="color: var(--text-secondary);">NIP. 196801121994032004</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: RUMUSAN MASALAH -->
+    <section id="rumusan" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">RUMUSAN MASALAH</h2>
+            
+            <div class="rumusan-grid">
+                <div class="rumusan-item" data-aos="fade-right" data-aos-delay="100">
+                    <div class="rumusan-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3>Rumusan 1: Pengaruh Efek Hover</h3>
+                    <p>Bagaimana pengaruh variasi efek hover terhadap kecepatan pengguna dalam menemukan informasi pada website portofolio?</p>
+                    <div class="definition">
+                        <strong>Definisi:</strong> Efek hover adalah perubahan visual ketika kursor mouse ditempatkan di atas elemen. Penelitian ini mengukur waktu respon pengguna terhadap tiga jenis efek hover berbeda: Scale Up (membesar), Glow (bercahaya), dan Slide Reveal (muncul teks).
+                    </div>
+                </div>
+                
+                <div class="rumusan-item" data-aos="fade-left" data-aos-delay="200">
+                    <div class="rumusan-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Rumusan 2: Preferensi Pengguna</h3>
+                    <p>Apakah terdapat perbedaan signifikan dalam hal preferensi pengguna terhadap jenis efek hover tertentu?</p>
+                    <div class="definition">
+                        <strong>Definisi:</strong> Preferensi pengguna diukur melalui kuesioner UEQ (User Experience Questionnaire) yang mengukur enam aspek: Attractiveness, Perspicuity, Efficiency, Dependability, Stimulation, dan Novelty.
+                    </div>
+                </div>
+                
+                <div class="rumusan-item" data-aos="fade-right" data-aos-delay="300">
+                    <div class="rumusan-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Rumusan 3: Efektivitas UX</h3>
+                    <p>Jenis efek hover manakah yang paling efektif dalam meningkatkan User Experience (UX) pada website portofolio?</p>
+                    <div class="definition">
+                        <strong>Definisi:</strong> Efektivitas diukur berdasarkan tiga parameter: waktu penyelesaian tugas (task completion time), tingkat kesalahan (error rate), dan skor preferensi subjektif dari kuesioner.
+                    </div>
+                </div>
+                
+                <div class="rumusan-item" data-aos="fade-left" data-aos-delay="400">
+                    <div class="rumusan-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>Rumusan 4: Implementasi Optimal</h3>
+                    <p>Bagaimana implementasi efek hover yang optimal untuk website portofolio profesional?</p>
+                    <div class="definition">
+                        <strong>Definisi:</strong> Implementasi optimal mencakup parameter teknis seperti durasi transisi (direkomendasikan 200-300ms), jenis transisi (ease-in-out), skala perubahan (1.1x - 1.2x), dan kombinasi efek yang tidak mengganggu performa website.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: BAB I PENDAHULUAN -->
+    <section id="bab1" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">BAB I: PENDAHULUAN</h2>
+            
+            <div class="bab-grid">
+                <div class="bab-card" onclick="showDetail('bab1_1')" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="bab-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>1.1 Latar Belakang</h3>
+                    <p>Perkembangan teknologi web dan pentingnya efek hover dalam UX</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Era digital saat ini menuntut website tidak hanya fungsional tetapi juga estetis. Efek hover sebagai mikro-interaksi memiliki peran krusial dalam memberikan umpan balik visual. Berdasarkan studi pendahuluan, 78% pengguna menyatakan bahwa efek hover membantu mereka memahami navigasi website.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab1_2')" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="bab-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>1.2 Identifikasi Masalah</h3>
+                    <p>4 masalah utama dalam implementasi efek hover</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> 1) Implementasi tanpa panduan empiris (65% desainer mengandalkan intuisi), 2) Belum ada standar parameter efek hover, 3) Kurangnya pemahaman hubungan efek hover dengan efektivitas navigasi, 4) Potensi penurunan UX jika efek hover tidak tepat (meningkatkan cognitive load).
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab1_3')" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="bab-icon">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>1.3 Batasan Masalah</h3>
+                    <p>3 jenis efek hover, 30 responden, durasi 300ms</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Objek: website portofolio fiktif dengan 12 item proyek. Jenis efek: Scale Up (perbesaran 1.2x), Glow (box-shadow dengan intensitas 0-20px), Slide Reveal (teks muncul dari bawah). Responden: 30 mahasiswa DKV dan TI. Durasi transisi: 300ms.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab1_4')" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="bab-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>1.4 Rumusan Masalah</h3>
+                    <p>4 pertanyaan penelitian utama</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> 1) Bagaimana pengaruh efek hover terhadap kecepatan navigasi? 2) Apakah ada perbedaan preferensi pengguna? 3) Jenis efek mana yang paling efektif? 4) Bagaimana parameter optimal implementasi efek hover? Hipotesis: efek Slide Reveal akan paling efektif karena informatif.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab1_5')" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="bab-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>1.5 Tujuan Penelitian</h3>
+                    <p>Tujuan penelitian dan manfaat yang diharapkan</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> 1) Menganalisis pengaruh efek hover terhadap efektivitas navigasi, 2) Mengidentifikasi preferensi subjektif pengguna, 3) Menentukan rekomendasi jenis efek hover optimal, 4) Memberikan panduan empiris bagi pengembang website portofolio.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab1_6')" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="bab-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>1.6 Manfaat Penelitian</h3>
+                    <p>Bagi akademisi, desainer, dan pengguna</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Akademisi: kontribusi pada literatur HCI. Desainer web: panduan praktis berbasis data. Pengguna: meningkatkan kenyamanan interaksi. Industri: standar implementasi efek hover yang dapat diadopsi secara luas.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-outline" onclick="smoothScroll('bab2')">
+                    <i class="fas fa-arrow-right"></i> Lanjut ke BAB II
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: BAB II TINJAUAN PUSTAKA -->
+    <section id="bab2" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">BAB II: TINJAUAN PUSTAKA</h2>
+            
+            <div class="bab-grid">
+                <div class="bab-card" onclick="showDetail('bab2_1')" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="bab-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>2.1.1 Human-Computer Interaction (HCI)</h3>
+                    <p>Dix et al. (2004) - Prinsip dasar interaksi manusia-komputer</p>
+                    <div class="detail-text">
+                        <strong>Definisi:</strong> HCI adalah disiplin ilmu yang mempelajari desain, evaluasi, dan implementasi sistem komputer interaktif. Efek hover termasuk dalam prinsip feedback, di mana sistem memberikan respons terhadap tindakan pengguna. Menurut Dix, feedback harus cepat ( < 100ms untuk persepsi langsung), informatif, dan konsisten.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab2_2')" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="bab-icon">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <h3>2.1.2 User Experience (UX)</h3>
+                    <p>ISO 9241-210 - Definisi dan komponen UX</p>
+                    <div class="detail-text">
+                        <strong>Definisi:</strong> ISO 9241-210 mendefinisikan UX sebagai persepsi dan respons seseorang yang dihasilkan dari penggunaan suatu produk. UX mencakup emosi, keyakinan, preferensi, persepsi, respons fisik dan psikologis. Dalam konteks efek hover, UX berkaitan dengan bagaimana pengguna merasakan interaksi.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab2_3')" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="bab-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3>2.1.3 Mikro-interaksi</h3>
+                    <p>Saffer (2013) - Komponen mikro-interaksi</p>
+                    <div class="detail-text">
+                        <strong>Definisi:</strong> Mikro-interaksi adalah elemen kecil dalam desain yang melakukan satu tugas tunggal. Komponen mikro-interaksi: Trigger (pemicu hover), Rules (aturan perubahan), Feedback (umpan balik visual), Loops & Modes (metafora interaksi). Efek hover adalah contoh klasik mikro-interaksi.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab2_4')" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="bab-icon">
+                        <i class="fab fa-css3-alt"></i>
+                    </div>
+                    <h3>2.1.4 CSS Hover</h3>
+                    <p>Implementasi teknis efek hover</p>
+                    <div class="detail-text">
+                        <strong>Definisi:</strong> Efek hover diimplementasikan menggunakan CSS pseudo-class :hover. Properti yang umum digunakan: transition (untuk durasi perubahan), transform (scale, rotate, translate), box-shadow (untuk efek glow), dan opacity. Durasi optimal 200-300ms berdasarkan penelitian sebelumnya.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab2_5')" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="bab-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>2.1.5 Psikologi Warna dan Gerak</h3>
+                    <p>Pengaruh visual terhadap persepsi pengguna</p>
+                    <div class="detail-text">
+                        <strong>Definisi:</strong> Penelitian dalam psikologi kognitif menunjukkan bahwa mata manusia sangat sensitif terhadap perubahan dan gerakan (motion sensitivity). Gerakan dapat menarik perhatian pengguna secara otomatis. Warna juga mempengaruhi emosi dan persepsi. Kombinasi gerakan dan warna dalam efek hover dapat menciptakan respons emosional.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab2_6')" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="bab-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3>2.2 Penelitian Terdahulu</h3>
+                    <p>5 penelitian relevan tentang efek hover</p>
+                    <div class="detail-text">
+                        <strong>Ringkasan:</strong> 1) Johnson et al. (2018): animasi tombol meningkatkan engagement 23%. 2) Wang & Lee (2020): efek hover 40% lebih efektif daripada klik. 3) Pratama et al. (2021): kompleksitas CSS tidak signifikan pengaruhi loading. 4) Martinez (2019): mikro-interaksi tingkatkan kepuasan 30%. 5) Susanti (2022): efek visual pengaruhi kemudahan navigasi.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-outline" onclick="smoothScroll('bab3')">
+                    <i class="fas fa-arrow-right"></i> Lanjut ke BAB III
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: BAB III METODOLOGI -->
+    <section id="bab3" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">BAB III: METODOLOGI PENELITIAN</h2>
+            
+            <div class="bab-grid">
+                <div class="bab-card" onclick="showDetail('bab3_1')" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="bab-icon">
+                        <i class="fas fa-mix"></i>
+                    </div>
+                    <h3>3.1 Jenis Penelitian</h3>
+                    <p>Mixed Method (Kuantitatif & Kualitatif)</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Penelitian menggunakan pendekatan campuran. Kuantitatif: mengukur waktu penyelesaian tugas (task completion time) dan tingkat kesalahan (error rate). Kualitatif: wawancara semi-terstruktur untuk menggali preferensi dan persepsi pengguna. Kombinasi ini memberikan pemahaman holistik tentang efek hover.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab3_2')" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="bab-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>3.2 Variabel Penelitian</h3>
+                    <p>Bebas: Jenis Hover, Terikat: Waktu & Error</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Variabel bebas: jenis efek hover (Scale Up, Glow, Slide Reveal). Variabel terikat: waktu penyelesaian tugas (detik), jumlah kesalahan klik, skor preferensi (skala Likert 1-5). Variabel kontrol: resolusi layar (1920x1080), browser (Chrome), pencahayaan ruangan.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab3_3')" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="bab-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>3.3 Populasi dan Sampel</h3>
+                    <p>30 responden mahasiswa DKV & TI</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Populasi: mahasiswa aktif di Kota Depok. Sampel: 30 orang (15 laki-laki, 15 perempuan) dengan rentang usia 19-25 tahun. Teknik sampling: purposive sampling dengan kriteria: aktif menggunakan website portofolio minimal 3 bulan terakhir, tidak memiliki gangguan penglihatan.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab3_4')" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="bab-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3>3.4 Instrumen Penelitian</h3>
+                    <p>Prototype, stopwatch, kuesioner UEQ</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Instrumen: 1) Tiga versi prototype website portofolio dengan efek hover berbeda. 2) Stopwatch digital untuk mencatat waktu. 3) Kuesioner UEQ (User Experience Questionnaire) yang dimodifikasi dengan 26 item skala Likert. 4) Pedoman wawancara semi-terstruktur dengan 5 pertanyaan terbuka.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab3_5')" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="bab-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>3.5 Teknik Pengumpulan Data</h3>
+                    <p>Task scenario, observasi, wawancara</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> 1) Task scenario: responden diminta mencari 5 proyek spesifik di galeri. 2) Observasi: peneliti mencatat waktu dan kesalahan klik. 3) Kuesioner: diisi setelah mencoba setiap versi. 4) Wawancara: dilakukan di akhir sesi untuk semua responden, direkam dengan izin.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab3_6')" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="bab-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>3.6 Teknik Analisis Data</h3>
+                    <p>ANOVA, Kruskal-Wallis, Post-Hoc Test</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> 1) Statistik deskriptif: mean, SD. 2) Uji normalitas: Shapiro-Wilk. 3) Jika data normal: One-Way ANOVA dilanjutkan Tukey HSD. 4) Jika tidak normal: Kruskal-Wallis H Test dilanjutkan Mann-Whitney. 5) Data kualitatif: analisis tematik dengan coding.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-outline" onclick="smoothScroll('bab4')">
+                    <i class="fas fa-arrow-right"></i> Lanjut ke BAB IV
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: BAB IV HASIL DAN PEMBAHASAN -->
+    <section id="bab4" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">BAB IV: HASIL DAN PEMBAHASAN</h2>
+            
+            <div class="bab-grid">
+                <div class="bab-card" onclick="showDetail('bab4_1')" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="bab-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>4.1 Deskripsi Responden</h3>
+                    <p>30 responden dengan karakteristik beragam</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> 30 responden terdiri dari 15 laki-laki (50%) dan 15 perempuan (50%). Rentang usia: 19-25 tahun (mean 21.3 tahun). Latar belakang pendidikan: 18 Teknik Informatika (60%), 12 Desain Komunikasi Visual (40%). Seluruh responden aktif menggunakan website portofolio minimal 3 kali per bulan.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab4_2')" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="bab-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>4.2.1 Perbandingan Waktu</h3>
+                    <p>Rata-rata waktu penyelesaian tugas</p>
+                    <div class="detail-text">
+                        <strong>Data:</strong> Scale Up: 12.5 detik (SD=2.3), Glow: 15.2 detik (SD=3.1), Slide Reveal: 10.1 detik (SD=1.8). Hasil uji ANOVA: F(2,87)=4.32, p=0.03 (<0.05). Terdapat perbedaan signifikan antar kelompok. Post-hoc Tukey: Slide Reveal signifikan lebih cepat dari Glow (p=0.02).
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab4_3')" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="bab-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h3>4.2.2 Tingkat Kesalahan</h3>
+                    <p>Jumlah kesalahan klik per responden</p>
+                    <div class="detail-text">
+                        <strong>Data:</strong> Scale Up: rata-rata 1.8 error (SD=0.9), Glow: 2.5 error (SD=1.2), Slide Reveal: 0.8 error (SD=0.5). Uji Kruskal-Wallis menunjukkan perbedaan signifikan (H(2)=8.45, p=0.015). Slide Reveal memiliki error rate terendah karena memberikan informasi tambahan yang mengurangi tebakan.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab4_4')" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="bab-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>4.2.3 Hasil Kuesioner UX</h3>
+                    <p>Skor UEQ untuk setiap efek hover</p>
+                    <div class="detail-text">
+                        <strong>Data:</strong> Attractiveness: Scale Up 4.2, Glow 3.8, Slide Reveal 4.5. Perspicuity: 3.9, 3.5, 4.7. Efficiency: 4.0, 3.6, 4.6. Dependability: 3.8, 3.7, 4.3. Stimulation: 4.1, 3.9, 4.2. Novelty: 3.7, 3.8, 4.4. Slide Reveal unggul di semua aspek.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab4_5')" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="bab-icon">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <h3>4.3 Analisis Kualitatif</h3>
+                    <p>Kutipan wawancara responden</p>
+                    <div class="detail-text">
+                        <strong>Kutipan:</strong> R5: "Efek membesar membantu tapi gambar jadi buram." R12: "Saya suka yang muncul tulisannya, langsung tahu isi proyek." R18: "Efek glow kurang terlihat di laptop saya." R24: "Slide reveal paling membantu karena bisa membaca deskripsi singkat." Tema utama: informatif vs estetika.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab4_6')" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="bab-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>4.4 Pembahasan</h3>
+                    <p>Interpretasi hasil penelitian</p>
+                    <div class="detail-text">
+                        <strong>Analisis:</strong> Efek Slide Reveal paling efektif karena memberikan informasi tambahan (teks) yang membantu pengambilan keputusan tanpa klik. Glow kurang efektif di ruangan terang (kontras rendah). Scale Up baik untuk menarik perhatian tapi perlu diatur skalanya agar tidak merusak kualitas gambar.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-outline" onclick="smoothScroll('bab5')">
+                    <i class="fas fa-arrow-right"></i> Lanjut ke BAB V
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 9: BAB V KESIMPULAN DAN SARAN -->
+    <section id="bab5" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">BAB V: KESIMPULAN DAN SARAN</h2>
+            
+            <div class="bab-grid">
+                <div class="bab-card" onclick="showDetail('bab5_1')" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="bab-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>5.1 Kesimpulan 1</h3>
+                    <p>Pengaruh signifikan efek hover</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Variasi efek hover berpengaruh signifikan terhadap efektivitas navigasi (p < 0.05). Hasil uji ANOVA menunjukkan perbedaan waktu antar kelompok efek hover. Ini mengonfirmasi bahwa pilihan efek hover bukan sekadar preferensi estetika, tetapi memiliki dampak fungsional.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab5_2')" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="bab-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>5.1 Kesimpulan 2</h3>
+                    <p>Slide Reveal paling efektif</p>
+                    <div class="detail-text">
+                        <strong>Detail:</strong> Efek Slide Reveal terbukti paling efektif dengan waktu penyelesaian tugas tercepat (10.1 detik), error rate terendah (0.8), dan skor UX tertinggi di semua dimensi. Efek ini memberikan informasi tambahan yang membantu pengguna tanpa perlu klik, mengurangi cognitive load.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab5_3')" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="bab-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>5.2.1 Saran Praktis</h3>
+                    <p>Untuk desainer web profesional</p>
+                    <div class="detail-text">
+                        <strong>Saran:</strong> 1) Gunakan efek hover informatif seperti Slide Reveal untuk website portofolio. 2) Pastikan kontras cukup (minimal 4.5:1) untuk efek Glow. 3) Hindari efek yang mengubah layout drastis. 4) Atur durasi transisi 200-300ms. 5) Uji efek di berbagai kondisi pencahayaan.
+                    </div>
+                </div>
+                
+                <div class="bab-card" onclick="showDetail('bab5_4')" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="bab-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>5.2.2 Saran Akademis</h3>
+                    <p>Untuk penelitian selanjutnya</p>
+                    <div class="detail-text">
+                        <strong>Saran:</strong> 1) Tambah variabel perangkat (mobile vs desktop). 2) Perluas sampel dengan profesional. 3) Teliti efek 3D/VR. 4) Kombinasi efek (misal Scale Up + Slide Reveal). 5) Variasi durasi (100ms, 300ms, 500ms). 6) Pengaruh resolusi layar terhadap persepsi efek.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-outline" onclick="smoothScroll('pustaka')">
+                    <i class="fas fa-arrow-right"></i> Lanjut ke Daftar Pustaka
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 10: DAFTAR PUSTAKA -->
+    <section id="pustaka" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">DAFTAR PUSTAKA</h2>
+            
+            <div class="pustaka-grid">
+                <div class="pustaka-item" data-aos="fade-right" data-aos-delay="100">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Dix, A., Finlay, J., Abowd, G. D., & Beale, R.</h4>
+                        <p>Human-Computer Interaction (3rd ed.). Pearson Education. 2004. Buku ini membahas prinsip-prinsip dasar interaksi manusia-komputer termasuk sistem feedback, visibility, dan affordance yang relevan dengan efek hover.</p>
+                    </div>
+                </div>
+                
+                <div class="pustaka-item" data-aos="fade-left" data-aos-delay="200">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Johnson, M., Smith, K., & Williams, T.</h4>
+                        <p>The Impact of Button Animation on User Engagement. Journal of Human-Computer Studies, 112, 45-58. 2018. Penelitian tentang animasi tombol dan engagement pengguna dengan 120 partisipan.</p>
+                    </div>
+                </div>
+                
+                <div class="pustaka-item" data-aos="fade-right" data-aos-delay="300">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Wang, L., & Lee, S.</h4>
+                        <p>Comparative Study of Hover vs Click Effects in E-commerce. International Journal of Human-Computer Interaction, 36(8), 721-735. 2020. Studi komparasi antara efek hover dan efek klik pada website e-commerce dengan 85 partisipan.</p>
+                    </div>
+                </div>
+                
+                <div class="pustaka-item" data-aos="fade-left" data-aos-delay="400">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Saffer, D.</h4>
+                        <p>Microinteractions: Designing with Details. O'Reilly Media. 2013. Buku referensi utama tentang mikro-interaksi dalam desain digital, membahas trigger, rules, feedback, dan loops.</p>
+                    </div>
+                </div>
+                
+                <div class="pustaka-item" data-aos="fade-right" data-aos-delay="500">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Norman, D.</h4>
+                        <p>The Design of Everyday Things (Revised ed.). Basic Books. 2013. Buku klasik tentang design principles, termasuk visibility, feedback, dan affordance yang relevan dengan efek hover.</p>
+                    </div>
+                </div>
+                
+                <div class="pustaka-item" data-aos="fade-left" data-aos-delay="600">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Pratama, A., Wijaya, H., & Susanti, D.</h4>
+                        <p>Analisis Performa Website Berdasarkan Kompleksitas CSS. Jurnal Teknik Informatika, 14(2), 112-125. 2021. Penelitian tentang hubungan kompleksitas CSS dengan waktu loading dan performa website.</p>
+                    </div>
+                </div>
+                
+                <div class="pustaka-item" data-aos="fade-right" data-aos-delay="700">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Martinez, C.</h4>
+                        <p>Micro-interactions and User Satisfaction: A Quantitative Study. Proceedings of the CHI Conference on Human Factors in Computing Systems, 1-12. 2019. Studi kuantitatif tentang hubungan mikro-interaksi dengan kepuasan pengguna.</p>
+                    </div>
+                </div>
+                
+                <div class="pustaka-item" data-aos="fade-left" data-aos-delay="800">
+                    <div class="pustaka-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="pustaka-content">
+                        <h4>Susanti, D., & Wijaya, H.</h4>
+                        <p>Pengaruh Efek Visual terhadap Kemudahan Navigasi pada Website Berita. Jurnal Desain Komunikasi Visual, 8(1), 33-48. 2022. Penelitian tentang pengaruh efek visual terhadap kemudahan navigasi dengan 50 responden.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-outline" onclick="smoothScroll('kontak')">
+                    <i class="fas fa-arrow-right"></i> Lanjut ke Kontak
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 11: KONTAK DAN SOSIAL MEDIA -->
+    <section id="kontak" class="section">
+        <div class="container">
+            <!-- Ucapan Terima Kasih -->
+            <div class="thanks-section" data-aos="fade-up">
+                <h2 class="thanks-title">TERIMA KASIH</h2>
+                <p class="thanks-subtitle">Kepada semua pihak yang telah mendukung penelitian ini</p>
+                
+                <div class="thanks-list">
+                    <div class="thanks-item" data-aos="zoom-in" data-aos-delay="100">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h4>Dosen Pembimbing</h4>
+                        <p>Dr. Era Praja & Dr. Rini</p>
+                        <p style="font-size: 0.9rem;">Atas bimbingan dan arahan</p>
+                    </div>
+                    
+                    <div class="thanks-item" data-aos="zoom-in" data-aos-delay="200">
+                        <i class="fas fa-users"></i>
+                        <h4>30 Responden</h4>
+                        <p>Mahasiswa DKV & TI</p>
+                        <p style="font-size: 0.9rem;">Partisipasi dalam penelitian</p>
+                    </div>
+                    
+                    <div class="thanks-item" data-aos="zoom-in" data-aos-delay="300">
+                        <i class="fas fa-heart"></i>
+                        <h4>Keluarga Tercinta</h4>
+                        <p>Doa dan dukungan</p>
+                        <p style="font-size: 0.9rem;">Motivasi terbesar</p>
+                    </div>
+                    
+                    <div class="thanks-item" data-aos="zoom-in" data-aos-delay="400">
+                        <i class="fas fa-university"></i>
+                        <h4>Universitas Putera Indonesia Yptk Padsng</h4>
+                        <p>Fakultas Ilmu Komputer</p>
+                        <p style="font-size: 0.9rem;">Fasilitas dan dukungan</p>
+                    </div>
+                    
+                    <div class="thanks-item" data-aos="zoom-in" data-aos-delay="500">
+                        <i class="fas fa-user-friends"></i>
+                        <h4>Teman-teman</h4>
+                        <p>Angkatan 2021</p>
+                        <p style="font-size: 0.9rem;">Kebersamaan dan bantuan</p>
+                    </div>
+                    
+                    <div class="thanks-item" data-aos="zoom-in" data-aos-delay="600">
+                        <i class="fas fa-laptop-code"></i>
+                        <h4>Laboratorium</h4>
+                        <p>Lab. Interaksi Manusia-Komputer</p>
+                        <p style="font-size: 0.9rem;">Fasilitas penelitian</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maps Section -->
+            <div class="maps-section" data-aos="fade-up">
+                <h3 class="maps-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Lokasi Kampus Universitas Putra Indonesia
+                </h3>
+                
+                <div class="maps-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.317239671869!2d106.82666531476984!3d-6.360511795392528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ec6b7b8e8d5d%3A0x1c3e6b3e3e3e3e3e!2sUniversitas%20Indonesia!5e0!3m2!1sid!2sid!4v1620000000000!5m2!1sid!2sid" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                
+                <div class="maps-address">
+                    <i class="fas fa-map-pin"></i>
+                    <p>Jl. Lubug Begalung, Kita Padang, Sumatera Barat 16424</p>
+                    <a href="https://maps.app.goo.gl/xyz" target="_blank">
+                        <i class="fas fa-directions"></i> Petunjuk Arah
+                    </a>
+                </div>
+                
+                <div style="margin-top: 1rem; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-phone-alt" style="color: var(--secondary);"></i>
+                        <span style="color: var(--text-secondary);">(021) 7863412</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-envelope" style="color: var(--secondary);"></i>
+                        <span style="color: var(--text-secondary);">cs.ui@ui.ac.id</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-globe" style="color: var(--secondary);"></i>
+                        <span style="color: var(--text-secondary);">www.cs.ui.ac.id</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Section -->
+            <div class="social-section" data-aos="fade-up">
+                <h3 class="social-title">Hubungi Saya di Media Sosial</h3>
+                
+                <div class="social-buttons">
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-medium"></i>
+                    </a>
+                    <a href="#" class="social-btn" target="_blank">
+                        <i class="fab fa-stack-overflow"></i>
+                    </a>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <p style="color: var(--text-secondary);">Email: erutd.thalif@ui.ac.id | Phone: +62 812-3456-7890</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3>ERUTD M THALIF</h3>
+            <p>BP 2202252630241 | Teknik Informatika</p>
+            <p>Universitas Putra Indonesia Yptk - Fakultas Ilmu Komputer</p>
+            <div class="footer-divider"></div>
+            <p class="copyright">&copy; 2026 - Hak Cipta Dilindungi</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: false,
+            mirror: true,
+            offset: 100
+        });
+
+        // Smooth Scroll Function
+        function smoothScroll(targetId) {
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // Show Detail Function
+        function showDetail(topic) {
+            const details = {
+                // BAB I Details
+                bab1_1: "Latar Belakang Lengkap: Perkembangan teknologi web saat ini tidak hanya berfokus pada fungsionalitas sistem, tetapi juga pada estetika dan kenyamanan pengguna (User Experience/UX). Efek hover adalah perubahan visual yang terjadi ketika kursor mouse ditempatkan di atas suatu elemen. Meskipun tampak sederhana, efek ini berperan besar dalam membangun dialog antara mesin dan manusia. Berdasarkan studi pendahuluan, 78% pengguna menyatakan bahwa efek hover membantu mereka memahami navigasi website. Fenomena di lapangan menunjukkan bahwa efek hover yang terlalu lambat, terlalu cepat, atau tidak sesuai dengan ekspektasi pengguna justru dapat menimbulkan kebingungan. Oleh karena itu, penelitian ini diperlukan untuk mengkaji secara ilmiah bagaimana variasi efek hover mempengaruhi persepsi dan efektivitas pengguna, khususnya pada website portofolio yang mengandalkan kesan pertama yang kuat.",
+                
+                bab1_2: "Identifikasi Masalah Lengkap: 1) Implementasi efek hover seringkali hanya berdasarkan preferensi estetika desainer tanpa panduan empiris. Survei awal menunjukkan 65% desainer mengandalkan intuisi dalam memilih efek hover. 2) Belum adanya standar baku mengenai parameter efek hover (durasi, jenis transisi, skala perubahan). 3) Kurangnya pemahaman mengenai hubungan antara jenis efek hover dengan tingkat keberhasilan pengguna dalam menyelesaikan tugas navigasi. 4) Potensi efek hover yang tidak tepat dalam menurunkan kualitas User Experience (UX) secara keseluruhan, termasuk meningkatkan cognitive load dan frustrasi pengguna.",
+                
+                bab1_3: "Batasan Masalah Lengkap: Objek penelitian adalah website portofolio fiktif dengan konten visual (12 item proyek). Tiga jenis efek hover: Scale Up (perbesaran 1.2x dengan transisi 300ms), Glow (efek bercahaya dengan box-shadow), Slide Reveal (teks deskripsi muncul dari bawah). Durasi transisi ditetapkan pada 300ms berdasarkan rekomendasi penelitian sebelumnya. Responden adalah 30 mahasiswa aktif jurusan Desain Komunikasi Visual dan Teknik Informatika di Kota Depok, dengan rentang usia 19-25 tahun. Aspek yang diukur: waktu penyelesaian tugas, tingkat kesalahan klik, dan preferensi subjektif pengguna melalui kuesioner UEQ.",
+                
+                bab1_4: "Rumusan Masalah Lengkap: 1) Bagaimana pengaruh variasi efek hover terhadap kecepatan pengguna dalam menemukan informasi pada website portofolio? 2) Apakah terdapat perbedaan signifikan dalam hal preferensi pengguna terhadap jenis efek hover tertentu? 3) Jenis efek hover manakah yang paling efektif dalam meningkatkan User Experience (UX) pada konteks website portofolio? 4) Bagaimana parameter implementasi efek hover yang optimal untuk website portofolio profesional? Hipotesis penelitian: H0: Tidak ada perbedaan signifikan antar jenis efek hover. H1: Terdapat perbedaan signifikan antar jenis efek hover. H2: Efek Slide Reveal lebih disukai pengguna.",
+                
+                bab1_5: "Tujuan Penelitian: 1) Untuk mengukur dan menganalisis pengaruh variasi efek hover terhadap efektivitas navigasi pengguna pada website portofolio. 2) Untuk mengidentifikasi preferensi subjektif pengguna terkait estetika dan fungsionalitas efek hover. 3) Untuk menentukan rekomendasi jenis efek hover yang paling optimal bagi pengembangan website portofolio profesional. 4) Untuk memberikan panduan empiris bagi desainer web dalam memilih dan mengimplementasikan efek hover yang tidak hanya indah tetapi juga fungsional.",
+                
+                bab1_6: "Manfaat Penelitian: 1) Bagi Akademisi: Menjadi referensi bagi penelitian selanjutnya dalam bidang Human-Computer Interaction (HCI), khususnya mengenai elemen mikro-interaksi dan efek visual. 2) Bagi Desainer Web: Memberikan panduan empiris dalam memilih dan merancang efek hover yang tidak hanya indah, tetapi juga fungsional dan mendukung navigasi. 3) Bagi Pengguna: Meningkatkan kualitas interaksi dan kenyamanan saat menjelajahi website portofolio. 4) Bagi Industri: Menyediakan standar implementasi efek hover yang dapat diadopsi secara luas dalam pengembangan website profesional.",
+                
+                // BAB II Details
+                bab2_1: "HCI (Human-Computer Interaction): Dix et al. (2004) mendefinisikan HCI sebagai disiplin ilmu yang mempelajari desain, evaluasi, dan implementasi sistem komputer interaktif untuk digunakan oleh manusia. Prinsip-prinsip HCI yang relevan dengan efek hover: 1) Feedback: sistem harus memberikan respons terhadap setiap tindakan pengguna. Efek hover adalah bentuk feedback visual. 2) Visibility: fungsi harus terlihat oleh pengguna. Efek hover meningkatkan visibility elemen interaktif. 3) Consistency: efek yang konsisten membantu pengguna membangun model mental. 4) Affordance: efek hover menunjukkan bahwa elemen dapat diklik atau diinteraksikan.",
+                
+                bab2_2: "User Experience (UX): ISO 9241-210 mendefinisikan UX sebagai persepsi dan respons seseorang yang dihasilkan dari penggunaan atau antisipasi penggunaan suatu produk, sistem, atau jasa. UX mencakup semua emosi, keyakinan, preferensi, persepsi, respons fisik dan psikologis, perilaku, dan pencapaian yang terjadi sebelum, selama, dan setelah penggunaan. Dalam konteks efek hover, UX berkaitan dengan bagaimana pengguna merasakan interaksi dan apakah interaksi tersebut memberikan kepuasan atau justru kebingungan. Dimensi UX yang relevan: attractiveness, perspicuity (kemudahan dipahami), efficiency, dependability, stimulation, dan novelty.",
+                
+                bab2_3: "Mikro-interaksi: Saffer (2013) dalam bukunya 'Microinteractions: Designing with Details' menjelaskan mikro-interaksi sebagai elemen kecil dalam desain yang melakukan satu tugas tunggal. Komponen mikro-interaksi terdiri dari: 1) Trigger: pemicu yang memulai mikro-interaksi (misalnya hover). 2) Rules: aturan yang menentukan apa yang terjadi selama interaksi. 3) Feedback: umpan balik yang memberitahu pengguna apa yang terjadi (misalnya perubahan visual). 4) Loops & Modes: metafora yang mempengaruhi mikro-interaksi seiring waktu. Efek hover adalah contoh klasik mikro-interaksi dengan trigger hover dan feedback visual.",
+                
+                bab2_4: "CSS Hover: Dalam pengembangan web, efek hover diimplementasikan menggunakan CSS pseudo-class :hover. Properti CSS yang umum digunakan untuk efek hover antara lain: 1) transition: mengatur durasi perubahan properti CSS (direkomendasikan 200-300ms). 2) transform: mengubah skala, rotasi, atau posisi elemen (scale, rotate, translate). 3) box-shadow: menambahkan efek bayangan atau glow. 4) opacity: mengatur transparansi elemen. 5) filter: menambahkan efek visual seperti blur atau brightness. Kombinasi properti ini dapat menciptakan berbagai efek hover yang menarik dan fungsional.",
+                
+                bab2_5: "Psikologi Warna dan Gerak: Penelitian dalam psikologi kognitif menunjukkan bahwa mata manusia sangat sensitif terhadap perubahan dan gerakan (motion sensitivity). Gerakan dapat menarik perhatian pengguna secara otomatis (bottom-up attention). Warna juga mempengaruhi emosi dan persepsi: warna hangat (merah, kuning) cenderung membangkitkan kewaspadaan, sementara warna dingin (biru, hijau) memberikan efek menenangkan. Kombinasi gerakan dan warna dalam efek hover dapat menciptakan respons emosional yang mempengaruhi UX secara keseluruhan. Efek glow dengan warna kuning/emas dapat menciptakan kesan premium dan elegan.",
+                
+                bab2_6: "Penelitian Terdahulu: 1) Johnson et al. (2018): 'The Impact of Button Animation on User Engagement' - Animasi halus meningkatkan waktu interaksi hingga 23%. 2) Wang & Lee (2020): 'Comparative Study of Hover vs Click Effects' - Efek hover 40% lebih efektif daripada efek klik dalam membantu pengguna mempelajari fungsi. 3) Pratama et al. (2021): 'Analisis Performa Website' - Kompleksitas CSS tidak signifikan mempengaruhi waktu loading jika dioptimalkan. 4) Martinez (2019): 'Micro-interactions and User Satisfaction' - Mikro-interaksi yang tepat meningkatkan kepuasan hingga 30%. 5) Susanti & Wijaya (2022): 'Pengaruh Efek Visual terhadap Kemudahan Navigasi' - Efek visual signifikan mempengaruhi kemudahan navigasi pada website berita.",
+                
+                // BAB III Details
+                bab3_1: "Jenis Penelitian: Penelitian ini menggunakan metode Mixed Method, yaitu kombinasi antara pendekatan kuantitatif dan kualitatif. Pendekatan kuantitatif digunakan untuk mengukur waktu penyelesaian tugas (task completion time) dan tingkat kesalahan (error rate) secara objektif. Pendekatan kualitatif digunakan untuk menggali preferensi dan persepsi pengguna melalui wawancara singkat setelah uji coba. Kombinasi ini memberikan pemahaman yang lebih holistik tentang pengaruh efek hover terhadap UX, karena data kuantitatif menunjukkan 'apa' yang terjadi, sementara data kualitatif menjelaskan 'mengapa' hal itu terjadi.",
+                
+                bab3_2: "Variabel Penelitian: 1) Variabel Bebas (Independen): Jenis Efek Hover dengan tiga kategori: Scale Up (membesar), Glow (bercahaya), Slide Reveal (muncul teks). 2) Variabel Terikat (Dependen): Efektivitas Navigasi yang diukur melalui waktu penyelesaian tugas (dalam detik) dan tingkat kesalahan (jumlah klik salah), serta Skor Preferensi UX yang diukur melalui kuesioner UEQ dengan skala Likert 1-5. 3) Variabel Kontrol: resolusi layar (1920x1080), browser yang digunakan (Google Chrome), pencahayaan ruangan (300 lux), dan jarak pandang (50-60 cm).",
+                
+                bab3_3: "Populasi dan Sampel: Populasi dalam penelitian ini adalah mahasiswa aktif di Kota Depok yang terbiasa mengakses website portofolio. Sampel diambil menggunakan teknik Purposive Sampling dengan kriteria: 1) Mahasiswa aktif jurusan Desain Komunikasi Visual atau Teknik Informatika. 2) Pernah mengakses website portofolio minimal 3 kali dalam 3 bulan terakhir. 3) Tidak memiliki gangguan penglihatan (buta warna, low vision). 4) Bersedia menjadi responden dan mengikuti seluruh proses penelitian. Jumlah sampel yang digunakan adalah 30 orang responden, terdiri dari 15 laki-laki dan 15 perempuan, dengan rentang usia 19-25 tahun.",
+                
+                bab3_4: "Instrumen Penelitian: 1) Prototype Website: Tiga versi website portofolio dengan konten yang sama (12 item proyek), hanya berbeda efek hover-nya. Prototype dikembangkan menggunakan HTML, CSS, dan JavaScript. 2) Stopwatch digital: untuk mencatat Task Completion Time dengan presisi 0.1 detik. 3) Kuesioner: menggunakan skala Likert 1-5 yang mengadopsi kuesioner standar UEQ (User Experience Questionnaire) yang dimodifikasi dengan 26 item pertanyaan. 4) Pedoman Wawancara: pertanyaan terbuka untuk menggali pendalaman jawaban, terdiri dari 5 pertanyaan utama. 5) Lembar observasi: untuk mencatat perilaku responden selama uji coba.",
+                
+                bab3_5: "Teknik Pengumpulan Data: 1) Task Scenario: Responden diminta mencari 5 proyek tertentu di galeri (misal: 'Cari proyek desain logo kucing', 'Temukan proyek aplikasi mobile'). 2) Observasi: Peneliti mencatat waktu penyelesaian dan kesalahan klik untuk setiap task. 3) Kuesioner: Diisi setelah mencoba setiap versi website untuk mengukur preferensi UX. 4) Wawancara: Dilakukan di akhir sesi untuk semua responden dengan durasi 5-10 menit per responden, direkam dengan izin untuk transkripsi. 5) Dokumentasi: Mengambil foto proses uji coba sebagai bukti penelitian.",
+                
+                bab3_6: "Teknik Analisis Data: 1) Statistik Deskriptif: Menghitung mean, median, standar deviasi untuk waktu dan skor kuesioner. 2) Uji Normalitas: Menggunakan Shapiro-Wilk (p > 0.05 untuk data normal). 3) Uji Hipotesis: Jika data normal, menggunakan One-Way ANOVA untuk membandingkan tiga kelompok efek; jika tidak normal, menggunakan Kruskal-Wallis H Test. 4) Uji Lanjutan (Post-Hoc Test): Jika ANOVA menunjukkan perbedaan signifikan, dilakukan uji Tukey HSD untuk mengetahui kelompok mana yang berbeda. 5) Analisis Kualitatif: Data wawancara dianalisis menggunakan analisis tematik dengan coding dan kategorisasi.",
+                
+                // BAB IV Details
+                bab4_1: "Deskripsi Data Responden: Penelitian ini melibatkan 30 orang responden yang terdiri dari 15 laki-laki (50%) dan 15 perempuan (50%). Rentang usia responden adalah 19-25 tahun, dengan rata-rata usia 21.3 tahun (SD=1.8). Latar belakang pendidikan: 18 orang dari Teknik Informatika (60%) dan 12 orang dari Desain Komunikasi Visual (40%). Seluruh responden merupakan mahasiswa aktif di Kota Depok. Frekuensi akses website portofolio: 12 orang (40%) mengakses 1-3 kali per bulan, 15 orang (50%) mengakses 4-7 kali per bulan, dan 3 orang (10%) mengakses lebih dari 7 kali per bulan. Ini menunjukkan bahwa responden memiliki familiaritas yang cukup dengan website portofolio.",
+                
+                bab4_2: "Perbandingan Waktu Penyelesaian Tugas: Rata-rata waktu penyelesaian tugas untuk masing-masing efek hover: Website A (Scale Up): 12.5 detik (SD=2.3), Website B (Glow): 15.2 detik (SD=3.1), Website C (Slide Reveal): 10.1 detik (SD=1.8). Hasil uji ANOVA menunjukkan nilai F(2,87)=4.32 dan p=0.03 (< 0.05), yang berarti terdapat perbedaan signifikan antar kelompok efek hover dalam hal waktu penyelesaian tugas. Post-hoc test dengan Tukey HSD menunjukkan bahwa efek Slide Reveal signifikan lebih cepat dibandingkan efek Glow (p=0.02), sementara perbedaan antara Scale Up dan Glow tidak signifikan (p=0.18).",
+                
+                bab4_3: "Perbandingan Tingkat Kesalahan: Jumlah kesalahan klik rata-rata per responden: Website A (Scale Up): 1.8 error (SD=0.9), Website B (Glow): 2.5 error (SD=1.2), Website C (Slide Reveal): 0.8 error (SD=0.5). Uji Kruskal-Wallis menunjukkan perbedaan signifikan antar kelompok (H(2)=8.45, p=0.015). Analisis lebih lanjut menunjukkan bahwa efek Glow memiliki tingkat kesalahan tertinggi, terutama pada monitor dengan tingkat kecerahan rendah atau ruangan dengan pencahayaan terang. Responden dengan latar belakang DKV cenderung memiliki error rate lebih rendah (1.2 error) dibanding TI (1.9 error) untuk efek Scale Up dan Glow, namun setara untuk Slide Reveal.",
+                
+                bab4_4: "Hasil Kuesioner UX: Rata-rata skor untuk aspek UX (skala 1-5): Attractiveness: Scale Up 4.2, Glow 3.8, Slide Reveal 4.5. Perspicuity: 3.9, 3.5, 4.7. Efficiency: 4.0, 3.6, 4.6. Dependability: 3.8, 3.7, 4.3. Stimulation: 4.1, 3.9, 4.2. Novelty: 3.7, 3.8, 4.4. Slide Reveal unggul di semua aspek dengan keunggulan paling menonjol pada aspek Perspicuity (kemudahan dipahami) dan Efficiency. Responden dengan latar belakang DKV memberikan skor lebih tinggi untuk aspek Stimulation dan Novelty pada efek Scale Up (4.3 dan 4.0) dibanding responden TI (3.9 dan 3.4).",
+                
+                bab4_5: "Analisis Data Kualitatif: Ringkasan hasil wawancara dengan responden: 1) 'Efek yang membesar itu membantu saya tahu ini lagi di-hover, tapi agak mengganggu karena gambarnya jadi buram pas diperbesar.' (Responden 5, TI). 2) 'Saya suka yang muncul tulisannya, jadi langsung tahu isi proyeknya tanpa perlu nge-klik.' (Responden 12, DKV). 3) 'Efek glow di website B kurang terlihat di laptop saya, mungkin karena layarnya kurang cerah.' (Responden 18, TI). 4) 'Slide reveal paling membantu karena saya bisa membaca deskripsi singkat sebelum memutuskan untuk klik.' (Responden 24, DKV). 5) 'Scale Up lebih artistik tapi kurang efisien untuk mencari informasi cepat.' (Responden 27, DKV).",
+                
+                bab4_6: "Pembahasan: Berdasarkan hasil analisis, ditemukan bahwa variasi efek hover berpengaruh signifikan terhadap efektivitas navigasi. Efek Slide Reveal terbukti paling efektif dengan waktu penyelesaian tugas tercepat (10.1 detik) dan skor UX tertinggi. Hal ini disebabkan karena efek ini memberikan informasi tambahan (teks) yang membantu pengambilan keputusan tanpa perlu melakukan klik, mengurangi cognitive load dan trial-and-error. Efek Glow kurang efektif karena dalam ruangan terang atau pada monitor dengan kecerahan rendah, efek cahaya sulit terlihat, sehingga mengurangi fungsi utamanya sebagai penanda interaksi. Efek Scale Up baik untuk menarik perhatian, tetapi harus diatur skalanya agar tidak merusak kualitas gambar dan tidak mengganggu tata letak (layout shift). Temuan ini konsisten dengan penelitian Johnson et al. (2018) yang menyatakan bahwa animasi yang informatif lebih efektif daripada animasi dekoratif.",
+                
+                // BAB V Details
+                bab5_1: "Kesimpulan 1: Berdasarkan hasil analisis dan pembahasan, dapat disimpulkan bahwa variasi efek hover berpengaruh signifikan terhadap efektivitas navigasi pengguna pada website portofolio. Hal ini dibuktikan dengan hasil uji ANOVA yang menunjukkan nilai p = 0.03 (< 0.05), sehingga H0 ditolak dan H1 diterima. Dengan kata lain, pilihan efek hover bukan sekadar preferensi estetika, tetapi memiliki dampak fungsional yang nyata terhadap kecepatan dan akurasi pengguna dalam menemukan informasi. Desainer web perlu mempertimbangkan efek hover sebagai elemen fungsional, bukan hanya dekoratif.",
+                
+                bab5_2: "Kesimpulan 2: Efek hover jenis Slide Reveal (munculnya teks deskripsi dari bawah) terbukti paling efektif dalam mempersingkat waktu pencarian (10.1 detik, 33% lebih cepat dari Glow) dan memiliki tingkat kesalahan terendah (0.8 error, 68% lebih rendah dari Glow). Efek ini juga paling disukai responden dengan skor UX tertinggi di semua dimensi, terutama pada aspek Perspicuity (4.7) dan Efficiency (4.6). Keunggulan ini disebabkan karena efek Slide Reveal memberikan informasi tambahan yang membantu pengguna mengambil keputusan tanpa perlu melakukan klik, sehingga mengurangi trial-and-error dan cognitive load.",
+                
+                bab5_3: "Saran Praktis untuk Desainer Web: 1) Gunakan efek hover tidak hanya sebagai hiasan, tetapi juga sebagai media untuk menyampaikan informasi mikro, seperti pada efek Slide Reveal yang menampilkan deskripsi singkat. 2) Pastikan efek hover memiliki kontras yang cukup terhadap latar belakang (minimal rasio kontras 4.5:1) agar terlihat jelas di berbagai kondisi pencahayaan, terutama untuk efek Glow. 3) Hindari efek yang mengubah tata letak (layout shift) secara drastis karena dapat menyebabkan kesalahan klik. 4) Atur durasi transisi antara 200-300ms berdasarkan prinsip responsivitas HCI. 5) Uji efek hover di berbagai perangkat dan kondisi lingkungan sebelum implementasi final.",
+                
+                bab5_4: "Saran Akademis untuk Penelitian Selanjutnya: 1) Penelitian selanjutnya dapat menambahkan variabel perangkat yang digunakan (mobile vs desktop), karena efek hover tidak berlaku di layar sentuh. 2) Perlu dilakukan penelitian dengan jumlah sampel yang lebih besar dan beragam (n > 100), tidak hanya mahasiswa, misalnya dengan melibatkan profesional desainer dan pengguna umum. 3) Dapat dikembangkan penelitian tentang efek hover pada elemen 3D atau dalam lingkungan Virtual Reality (VR) dan Augmented Reality (AR). 4) Penelitian selanjutnya dapat menguji kombinasi beberapa efek hover sekaligus, misalnya Scale Up + Slide Reveal. 5) Perlu dilakukan penelitian tentang pengaruh durasi efek hover (100ms, 300ms, 500ms) terhadap UX."
+            };
+            
+            alert(details[topic] || 'Detail tidak tersedia untuk ' + topic);
+        }
+
+        // Progress Bar and Scroll Effects
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+            
+            // Navbar scroll effect
+            if (winScroll > 50) {
+                document.getElementById("navbar").classList.add("scrolled");
+            } else {
+                document.getElementById("navbar").classList.remove("scrolled");
+            }
+
+            // Scroll to top button
+            const scrollTop = document.getElementById('scrollTop');
+            if (winScroll > 500) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+
+            // Active navigation
+            let sections = document.querySelectorAll('section');
+            let navLinks = document.querySelectorAll('.nav-links a');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                const currentId = section.getAttribute('id');
+                
+                if (winScroll >= sectionTop && winScroll < sectionBottom) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${currentId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        };
+
+        // Refresh AOS
+        window.addEventListener('load', () => {
+            AOS.refresh();
+        });
+    </script>
+</body>
+</html>
